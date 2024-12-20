@@ -1,13 +1,12 @@
 package com.practicemovieapi;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+
+
 import com.practicemovieapi.controller.MovieController;
 import com.practicemovieapi.dto.MovieDto;
-import com.practicemovieapi.dto.MoviePaginationResponse;
 import com.practicemovieapi.service.MovieService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockMultipartFile;

@@ -5,6 +5,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -17,8 +18,9 @@ import java.util.function.Function;
 @Service
 public class JwtService {
 
-    private final String secretKey = "BF7FD11ACE545745B7BA1AF98B6F156D127BC7BB544BAB6A4FD74E4FC7";
 
+    @Value("${jwt.key}")
+    private String secretKey;
     // extract username from JWT
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
@@ -47,8 +49,10 @@ public class JwtService {
     }
 
 
-    public String generateToken(UserDetails userDetails) {
-        return generateToken(new HashMap<>(), userDetails);
+    public String generateToken(UserDetails userDetails, String role) {
+        Map<String, Object> extraClaims = new HashMap<>();
+        extraClaims.put("role", role); // Add role to claims
+        return generateToken(extraClaims, userDetails);
     }
 
     // generate token using Jwt utility class and return token as String
@@ -79,6 +83,7 @@ public class JwtService {
 
     // get expiration date from token
     private Date extractExpiration(String token) {
+
         return extractClaim(token, Claims::getExpiration);
     }
 }

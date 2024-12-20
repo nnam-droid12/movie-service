@@ -1,6 +1,6 @@
 package com.practicemovieapi.auth.service;
 
-import com.practicemovieapi.auth.MailBody;
+import com.practicemovieapi.auth.utils.MailBody;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;

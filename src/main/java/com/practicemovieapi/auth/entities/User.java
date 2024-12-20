@@ -88,4 +88,19 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
+    public void setEmail(String adminEmail) {
+    }
+
+    public void setPassword(String admin_password) {
+    }
+
+    public void setRole(String admin) {
+    }
+
+    public void setName(String defaultAdmin) {
+    }
+
+    public void setUsername(String admin) {
+    }
 }

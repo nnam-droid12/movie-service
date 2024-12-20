@@ -29,7 +29,7 @@ public class SecurityConfiguration {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/v1/auth/**", "/api/v1/forgot-password/**").permitAll()
+                        .requestMatchers("/api/v1/auth/**", "/ws/**", "/api/v1/forgot-password/**").permitAll()
                         .requestMatchers("/file/**").authenticated()
                        .requestMatchers("/api/v1/movie/**").authenticated()
                 ).sessionManagement(session -> session

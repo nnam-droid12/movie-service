@@ -2,11 +2,14 @@ package com.practicemovieapi.service;
 
 import com.practicemovieapi.Exception.FileExistException;
 import com.practicemovieapi.Exception.MovieNotFoundException;
+import com.practicemovieapi.controller.NotificationController;
 import com.practicemovieapi.dto.MovieDto;
 import com.practicemovieapi.dto.MoviePaginationResponse;
 import com.practicemovieapi.entities.Movie;
 import com.practicemovieapi.repository.MovieRepository;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -26,11 +29,13 @@ public class MovieServiceImpl implements MovieService{
 
     private final MovieRepository movieRepository;
     private final FileService fileService;
+    private final NotificationController notificationController;
 
 
-    public MovieServiceImpl(MovieRepository movieRepository, FileService fileService) {
+    public MovieServiceImpl(MovieRepository movieRepository, FileService fileService, NotificationController notificationController) {
         this.movieRepository = movieRepository;
         this.fileService = fileService;
+        this.notificationController = notificationController;
     }
 
     @Value("${base.url}")
@@ -68,7 +73,7 @@ public class MovieServiceImpl implements MovieService{
 
         // map dto object to movie object
         MovieDto response = new MovieDto(
-                null,
+                savedMovie.getMovieId(),
                 savedMovie.getTitle(),
                 savedMovie.getStudio(),
                 savedMovie.getDirector(),
@@ -77,9 +82,12 @@ public class MovieServiceImpl implements MovieService{
                 savedMovie.getImage(),
                 imageUrl
         );
+
+        notificationController.sendNewMovieNotification(response);
         return response;
     }
 
+    @Cacheable(value ="movie", key="#movieId")
     @Override
     public MovieDto getMovie(Integer movieId) {
 
@@ -100,6 +108,7 @@ public class MovieServiceImpl implements MovieService{
         return response;
     }
 
+    @Cacheable(value = "movie", key = "'allMovies'")
     @Override
     public List<MovieDto> getAllMovies() {
 
@@ -126,6 +135,7 @@ public class MovieServiceImpl implements MovieService{
 
         return allMovies;
     }
+
 
     @Override
     public MovieDto updateMovie(Integer movieId, MovieDto moviedto, MultipartFile file) throws IOException {
@@ -170,6 +180,7 @@ public class MovieServiceImpl implements MovieService{
         return response;
     }
 
+    @CacheEvict(value ="movie", key="#movieId")
     @Override
     public String deleteMovie(Integer movieId) throws IOException {
 

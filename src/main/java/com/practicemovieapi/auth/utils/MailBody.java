@@ -1,4 +1,4 @@
-package com.practicemovieapi.auth;
+package com.practicemovieapi.auth.utils;
 
 import lombok.Builder;
 

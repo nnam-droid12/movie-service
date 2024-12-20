@@ -52,6 +52,7 @@ public class MovieController {
         return ResponseEntity.ok(movieService.getAllMovies());
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PutMapping("/update-movie/{movieId}")
     public ResponseEntity<MovieDto> updateMovieHandler(@PathVariable Integer movieId,
                                                        @RequestPart String moviedto,

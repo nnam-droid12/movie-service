@@ -41,11 +41,18 @@ public class AuthController {
         return ResponseEntity.ok(authService.login(loginRequest));
     }
 
+
+    @PostMapping("/admin-login")
+    public ResponseEntity<AuthResponse> adminLogin(@RequestBody LoginRequest loginRequest) {
+        return ResponseEntity.ok(authService.adminLogin(loginRequest));
+    }
+
+
     @PostMapping("/refresh")
     public ResponseEntity<AuthResponse> refreshTokenHandler(@RequestBody RefreshTokenRequest refreshTokenRequest){
         RefreshToken refreshToken = refreshTokenService.verifyRefreshToken(refreshTokenRequest.getRefreshToken());
         User user = refreshToken.getUser();
-        String accessToken = jwtService.generateToken(user);
+        String accessToken = jwtService.generateToken(user, "USER");
 
         return ResponseEntity.ok(AuthResponse.builder()
                 .accessToken(accessToken)

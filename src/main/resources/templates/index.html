@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Notifications</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        h1 {
+            color: #333;
+        }
+        .notifications {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            max-width: 600px;
+        }
+        .notification {
+            margin-bottom: 10px;
+            padding: 5px;
+            border-bottom: 1px dashed #aaa;
+        }
+    </style>
+</head>
+<body>
+<h1>Real-Time Movie Notifications</h1>
+<div id="notification-list" class="notifications">
+    <p>No notifications yet...</p>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sockjs-client/dist/sockjs.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/stompjs/lib/stomp.min.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const notificationList = document.getElementById('notification-list');
+
+        // Connect to the WebSocket server
+        const socket = new SockJS('http://localhost:8080/ws'); // Use full backend URL
+        const stompClient = Stomp.over(socket);
+
+        stompClient.connect({}, () => {
+            console.log('Connected to WebSocket');
+
+            // Subscribe to the '/topic/newMovie' topic
+            stompClient.subscribe('/topic/newMovie', (message) => {
+                // Display the notification
+                const newNotification = document.createElement('div');
+                newNotification.className = 'notification';
+                newNotification.textContent = message.body;
+
+                // Remove "No notifications yet..." if it exists
+                if (notificationList.textContent.includes("No notifications yet...")) {
+                    notificationList.textContent = "";
+                }
+
+                notificationList.appendChild(newNotification);
+            });
+        });
+
+        stompClient.debug = null; // Disable console logs from STOMP
+    });
+</script>
+</body>
+</html>

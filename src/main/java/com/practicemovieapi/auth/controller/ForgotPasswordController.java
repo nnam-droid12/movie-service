@@ -1,7 +1,7 @@
 package com.practicemovieapi.auth.controller;
 
 
-import com.practicemovieapi.auth.MailBody;
+import com.practicemovieapi.auth.utils.MailBody;
 import com.practicemovieapi.auth.entities.ForgotPassword;
 import com.practicemovieapi.auth.entities.User;
 import com.practicemovieapi.auth.repository.ForgotPasswordRepository;
